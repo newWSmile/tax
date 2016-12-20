@@ -2,10 +2,13 @@ package cn.itcast.nsfw.user.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
@@ -26,6 +29,10 @@ public class UserAction extends ActionSupport {
 	private File headImg;
 	private String headImgContentType;
 	private String headImgFileName;
+	
+	private File userExcel;
+	private String userExcelContentType;
+	private String userExcelFileName;
 
 	//列表页面
 	public String listUI(){
@@ -121,7 +128,40 @@ public class UserAction extends ActionSupport {
 		}
 		return "list";
 	}
+	//导出用户列表
+	public void exportExcel(){
+		try {
+			//1查找用户列表
+			userList = userService.findObjects();
+			//2导出
+			HttpServletResponse response = ServletActionContext.getResponse();
+			response.setContentType("application/x-execl");
+			response.setHeader("Content-Disposition", "attachment;filename="+new String("用户列表.xls".getBytes(),"iso-8859-1"));
+			ServletOutputStream outputStream = response.getOutputStream();
+			userService.exportExcel(userList,outputStream);
+			if (outputStream!=null) {
+				outputStream.close();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
+	//导入用户列表
+	public String importExcel(){
+		//1获取excel文件
+		if (userExcel!=null) {
+			//是否是excel
+			if(userExcelFileName.matches("^.+\\.(?i)((xls)|(xlsx))$")){
+				//导入
+				userService.importExcel(userExcel,userExcelFileName);
+			}
+		}
+		
+		return "list";
+	}
 	
 	public List<User> getUserList() {
 		return userList;
@@ -169,6 +209,30 @@ public class UserAction extends ActionSupport {
 
 	public void setHeadImgFileName(String headImgFileName) {
 		this.headImgFileName = headImgFileName;
+	}
+
+	public File getUserExcel() {
+		return userExcel;
+	}
+
+	public void setUserExcel(File userExcel) {
+		this.userExcel = userExcel;
+	}
+
+	public String getUserExcelContentType() {
+		return userExcelContentType;
+	}
+
+	public void setUserExcelContentType(String userExcelContentType) {
+		this.userExcelContentType = userExcelContentType;
+	}
+
+	public String getUserExcelFileName() {
+		return userExcelFileName;
+	}
+
+	public void setUserExcelFileName(String userExcelFileName) {
+		this.userExcelFileName = userExcelFileName;
 	}
 	
 	

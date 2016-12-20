@@ -1,7 +1,10 @@
 package cn.itcast.nsfw.user.service;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+
+import javax.servlet.ServletOutputStream;
 
 import cn.itcast.nsfw.user.entity.User;
 
@@ -27,4 +30,12 @@ public interface UserService {
 	 * 查找列表
 	 */
 	public List<User> findObjects();
+	/**
+	 * 导出用户列表
+	 * 
+	 */
+	public void exportExcel(List<User> userList,
+			ServletOutputStream outputStream);
+
+	public void importExcel(File userExcel, String userExcelFileName);
 }
