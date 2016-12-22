@@ -2,7 +2,6 @@ package cn.itcast.nsfw.user.action;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,21 +10,25 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.hibernate.validator.util.NewInstance;
 
+import cn.itcast.core.action.BaseAction;
+import cn.itcast.core.exception.ActionException;
+import cn.itcast.core.exception.ServiceException;
+import cn.itcast.core.exception.SysException;
 import cn.itcast.nsfw.user.entity.User;
 import cn.itcast.nsfw.user.service.UserService;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-public class UserAction extends ActionSupport {
+public class UserAction extends BaseAction {
 	@Resource
 	private UserService userService;
 	
 	private List<User> userList;
 	private User user;
-	private String[] selectedRow;
+	
 	private File headImg;
 	private String headImgContentType;
 	private String headImgFileName;
@@ -33,10 +36,16 @@ public class UserAction extends ActionSupport {
 	private File userExcel;
 	private String userExcelContentType;
 	private String userExcelFileName;
-
+	
+	
 	//列表页面
-	public String listUI(){
-		userList = userService.findObjects();
+	public String listUI() throws Exception{
+		try {
+			userList = userService.findObjects();
+		} catch (ServiceException e) {
+			throw new Exception(e.getMessage());
+		}
+//		return "error";
 		return "listUI";
 	}
 	
@@ -143,7 +152,6 @@ public class UserAction extends ActionSupport {
 				outputStream.close();
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -163,6 +171,33 @@ public class UserAction extends ActionSupport {
 		return "list";
 	}
 	
+	//校验用户账号唯一
+	public void verifyAccount(){
+		System.out.println("##########进入判断账号唯一");
+		try {
+			//1获取账号
+			if(user!=null && StringUtils.isNotBlank(user.getAccount())){
+				//2根据账号到数据库中校验是否存在改账号对应的用户
+				List<User> list = userService.findUserByAccountAndId(user.getId(),user.getAccount());
+				String strResult = "true";
+				if(list!=null && list.size()>0){
+					//说明该账号已存在
+					strResult = "false";
+				}
+				//输出
+				HttpServletResponse response = ServletActionContext.getResponse();
+				response.setContentType("text/html");
+				ServletOutputStream outputStream = response.getOutputStream();
+				outputStream.write(strResult.getBytes());
+				outputStream.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 	public List<User> getUserList() {
 		return userList;
 	}
@@ -179,13 +214,7 @@ public class UserAction extends ActionSupport {
 		this.user = user;
 	}
 
-	public String[] getSelectedRow() {
-		return selectedRow;
-	}
-
-	public void setSelectedRow(String[] selectedRow) {
-		this.selectedRow = selectedRow;
-	}
+	
 
 	public File getHeadImg() {
 		return headImg;

@@ -4,7 +4,55 @@
     <%@include file="/common/header.jsp"%>
     <title>用户管理</title>
      <script type="text/javascript" src="${basePath }js/datepicker/WdatePicker.js"></script>
-    
+      <script type="text/javascript">
+    	var vResult = false;
+    	function doVerify(){
+    		//1获取账号
+    		var account = $("#account").val();
+    		if(account!=""){
+	    		//2校验
+    			$.ajax({
+    				url:"${basePath}nsfw/user_verifyAccount.action",
+    				data:{"user.account":account,"user.id":"${user.id}"},
+    				type:"post",
+    				//ajax同步操作
+    				async:false,
+    				success:function(msg){
+    					if("true"!=msg){
+    						//账号已经存在
+    						alert("账号已经存在,请使用其他账号!");
+    						//定焦
+    						$("#account").focus();
+    						vResult=false;
+    					}else{
+    						vResult=true;
+    					}
+    				}
+    			});
+    		}
+    	}
+    	//提交表单
+    	function doSubmit(){
+    		var name = $("#name");
+    		if(name.val()==""){
+    			alert("用户名不嫩他为空");
+    			name.focus();
+    			return false;
+    		}
+    		var password = $("#password");
+    		if(password.val()==""){
+    			alert("用户名不嫩他为空");
+    			password.focus();
+    			return false;
+    		}
+    		//账号校验
+    		doVerify();
+    		//提交表单
+    		if(vResult){
+	    		document.forms[0].submit();
+    		}
+    	}
+    </script>
 </head>
 <body class="rightBody">
 <form id="form" name="form" action="${basePath }nsfw/user_edit.action" method="post" enctype="multipart/form-data">
@@ -30,15 +78,15 @@
         </tr>
         <tr>
             <td class="tdBg" width="200px">用户名：</td>
-            <td><s:textfield name="user.name"/> </td>
+            <td><s:textfield id="name" name="user.name"/> </td>
         </tr>
         <tr>
             <td class="tdBg" width="200px">帐号：</td>
-            <td><s:textfield name="user.account"/></td>
+            <td><s:textfield id="account" name="user.account" onchange="doVerify()"/></td>
         </tr>
         <tr>
             <td class="tdBg" width="200px">密码：</td>
-            <td><s:textfield name="user.password"/></td>
+            <td><s:textfield id="password" name="user.password"/></td>
         </tr>
         <tr>
             <td class="tdBg" width="200px">性别：</td>
@@ -75,7 +123,7 @@
     </table>
     <s:hidden name="user.id"/>
     <div class="tc mt20">
-        <input type="submit" class="btnB2" value="保存" />
+        <input type="button" class="btnB2" value="保存" onclick="doSubmit()"/>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <input type="button"  onclick="javascript:history.go(-1)" class="btnB2" value="返回" />
     </div>
