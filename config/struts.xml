@@ -37,5 +37,7 @@
     <include file="cn/itcast/test/config/test-struts.xml"></include>
 	<!--导入外部用户管理的Struts配置文件   struts有的版本不能用通配符扫描-->
     <include file="cn/itcast/nsfw/user/conf/user-struts.xml"></include>
+	<!--导入外部角色管理的Struts配置文件   struts有的版本不能用通配符扫描-->
+    <include file="cn/itcast/nsfw/role/conf/role-struts.xml"></include>
    	
 </struts>

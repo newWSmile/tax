@@ -22,6 +22,7 @@ public abstract class BaseDaoImpl<T> extends HibernateDaoSupport implements Base
 
 	@Override
 	public void update(T entity) {
+		
 		getHibernateTemplate().update(entity);
 	}
 
