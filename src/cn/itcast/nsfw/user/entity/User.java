@@ -2,6 +2,7 @@ package cn.itcast.nsfw.user.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class User implements Serializable {
 	private String id;
@@ -16,10 +17,12 @@ public class User implements Serializable {
 	private String email;
 	private Date birthday;//生日
 	private String memo;//备注
-	
+	private List<UserRole> userRoles;//用户角色
 	//用户状态
 	public static String  USER_STATE_VALID = "1";//有效
 	public static String  USER_STATE_INVALID = "0";//无效
+	
+	
 	
 	//构造函数
 	public User() {
@@ -121,6 +124,19 @@ public class User implements Serializable {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+
+
+	public List<UserRole> getUserRoles() {
+		return userRoles;
+	}
+
+
+	public void setUserRoles(List<UserRole> userRoles) {
+		this.userRoles = userRoles;
+	}
+
+
+	
 	
 	
 	

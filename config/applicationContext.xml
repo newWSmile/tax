@@ -7,9 +7,9 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-    <!--引入外部的spring配置文件  -->
-    <import resource="classpath:cn/itcast/*/config/*-spring.xml"/>
-    <import resource="classpath:cn/itcast/nsfw/*/conf/*-spring.xml"/>
+    
+    
+   
     
     <!-- 导入外部的properties配置文件 -->
 	<context:property-placeholder location="classpath:db.properties" />
@@ -73,10 +73,17 @@
 	</aop:config>
 	
 	
+	
 	 <!--所有业务dao的parent:这个bean只是为了将sessionFactory传入到需要的bean中 ,跟我们的baseDao类无关 -->
     <bean id="baseDao" abstract="true">
     	<property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
-	
     
+    <!--权限鉴定类  -->
+	<bean id="permissionCheck" class="cn.itcast.core.permission.impl.PermissionCheckImpl"></bean>
+    
+	
+	 <!--引入外部的spring配置文件  -->
+    <import resource="classpath:cn/itcast/*/config/*-spring.xml"/>
+    <import resource="classpath:cn/itcast/nsfw/*/conf/*-spring.xml"/>
 </beans>

@@ -39,5 +39,11 @@
     <include file="cn/itcast/nsfw/user/conf/user-struts.xml"></include>
 	<!--导入外部角色管理的Struts配置文件   struts有的版本不能用通配符扫描-->
     <include file="cn/itcast/nsfw/role/conf/role-struts.xml"></include>
+	<!--导入系统首页的Struts配置文件   struts有的版本不能用通配符扫描-->
+    <include file="cn/itcast/home/conf/home-struts.xml"></include>
+	<!--导入纳税服务系统首页的Struts配置文件   struts有的版本不能用通配符扫描-->
+    <include file="cn/itcast/nsfw/home/conf/home-struts.xml"></include>
+	<!--导入包含登录的Struts配置文件   struts有的版本不能用通配符扫描-->
+    <include file="cn/itcast/login/conf/login-struts.xml"></include>
    	
 </struts>

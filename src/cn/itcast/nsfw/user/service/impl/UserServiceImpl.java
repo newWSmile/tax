@@ -27,8 +27,11 @@ import org.springframework.stereotype.Service;
 
 import cn.itcast.core.exception.ServiceException;
 import cn.itcast.core.util.ExcelUtil;
+import cn.itcast.nsfw.role.entity.Role;
 import cn.itcast.nsfw.user.dao.UserDao;
 import cn.itcast.nsfw.user.entity.User;
+import cn.itcast.nsfw.user.entity.UserRole;
+import cn.itcast.nsfw.user.entity.UserRoleId;
 import cn.itcast.nsfw.user.service.UserService;
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -48,6 +51,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void delete(Serializable id) {
 		userDao.delete(id);
+		//删除用户对应的所有权限
+		userDao.deleteUserRoleByUserId(id);
 	}
 
 	@Override
@@ -132,6 +137,44 @@ public class UserServiceImpl implements UserService {
 	public List<User> findUserByAccountAndId(String id, String account) {
 		
 		return userDao.findUserByAccountAndId(id,account);
+	}
+
+	@Override
+	public void saveUserAndRole(User user, String... roleIds) {
+		//1保存用户
+		save(user);
+		//2保存用户对应的角色
+		if(roleIds!=null){
+			for(String roleId:roleIds){
+				userDao.saveUserRole(new UserRole(new UserRoleId(new Role(roleId), user.getId())));
+			}
+		}
+	}
+
+	@Override
+	public void updateUserAndRole(User user, String... roleIds) {
+		//1根据用户删除该用户的所有角色
+		userDao.deleteUserRoleByUserId(user.getId());
+		//2更新用户
+		update(user);
+		//3保存
+		if(roleIds!=null){
+			for(String roleId:roleIds){
+				userDao.saveUserRole(new UserRole(new UserRoleId(new Role(roleId), user.getId())));
+			}
+		}
+	}
+
+	@Override
+	public List<UserRole> getUserRolesByUserId(String id) {
+		
+		return userDao.getUserRolesByUserId(id);
+	}
+	//根据用户的账号密码查询用户列表
+	@Override
+	public List<User> findUserByAccountAndPass(String account, String password) {
+		
+		return userDao.findUserByAccountAndPass(account,password);
 	}
 	
 }

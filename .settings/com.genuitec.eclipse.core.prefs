@@ -1,4 +1,4 @@
-#Fri Dec 23 17:20:57 CST 2016
+#Sun Jan 01 15:33:00 CST 2017
 eclipse.preferences.version=1
-validator.Checked=WebRoot/js/jquery/jquery-1.10.2.min.js
+validator.Checked=src/cn/itcast/login/conf/login-struts.xml,WebRoot/js/jquery/jquery-1.10.2.min.js
 validator.Unchecked=

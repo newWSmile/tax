@@ -4,6 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Constant {
+	
+	//系统中用户在session中的标识符
+	public static String USER ="SYS_USER";
+	
+	
+	
+	
 	/***********系统权限集合*************/
 	public static String PRIVILEGE_XZGL="xzgl";
 	public static String PRIVILEGE_HQFW="hqfw";
@@ -21,4 +28,7 @@ public class Constant {
 		PRIVILEGE_MAP.put(PRIVILEGE_NSFW, "纳税服务");
 		PRIVILEGE_MAP.put(PRIVILEGE_SPACE, "我的空间");
 	}
+	
+	
+	
 }
